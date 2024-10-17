@@ -1,0 +1,640 @@
+---
+title: "HW06"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+Task 1: Conceptual Questions
+
+```{r}
+```
+
+**1. What is the purpose of the lapply() function? What is the equivalent purrr function? **
+
+Ans: lapply():- Applies a function to elements in a list or a vector and returns the results in a list.The syntax of lapply is lapply(x, FUN,...) where x is a vector, FUN: the function to be applied to each element of x. purrr function:-- purrr::map()-- it is more consistency and some helper functions are there, it offers more control over output types and integrates well with the tidyverse.
+
+**2.  Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use lapply() to run the code cor(numeric_matrix, method = "kendall") on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify method = "kendall" when calling lapply())**
+
+```{r}
+
+list1 <- c(45,57,27,89,25,44)
+list2 <- c(34,23,567,45,67,26)
+
+my_list<- list(data.frame(list1,list2))
+
+cor_results <- lapply(my_list, function(numeric_matrix) {
+  cor(numeric_matrix, method = "kendall")
+})
+
+# Display the correlation results
+cor_results
+```
+
+**3.  What are two advantages of using purrr functions instead of the BaseR apply family? ans: There are two primary differences between the base apply family and the purrr map family: purrr functions are named more consistently, and more fully explore the space of input and output variants.**
+
+```{=html}
+<!-- -->
+```
+1)  purrr functions consistently use . as prefix to avoid inadvertently matching arguments of the purrr function, instead of the function that you’re trying to call. Base functions use a variety of techniques including upper case (e.g. lapply(X, FUN, ...)) or require anonymous functions (e.g. Map()).
+
+All map functions are type stable: you can predict the type of the output using little information about the inputs. In contrast, the base functions sapply() and mapply() automatically simplify making the return value hard to predict.
+
+2)  The map functions all start with the data, followed by the function, then any additional constant argument. Most base apply functions also follow this pattern, but mapply() starts with the function, and Map() has no way to supply additional constant arguments.
+
+purrr functions provide all combinations of input and output variants, and include variants specifically for the common two argument case.
+
+**4.  What is a side-effect function?**
+
+Ans: Side effect is a function that perfrorm an action beyond simply returning a value.Here are some key points :
+**1) Changing state:- ** Side-effect functions can modify global variables, change the contents of data frames, write to files, or alter the state of objects in the environment. For example, using assign() to create or modify a variable in a different environment is a side effect.
+
+         
+2) **Output Generation:** Functions that produce visual output (like plots or graphs) or print messages to the console are also considered side-effect functions. For instance, print(), plot(), and cat() functions display output rather than returning a value for further computation. Walk() :- this is a side- effect function but return the original data. It is used to apply a function to each element of a list or vector without returning a result. It’s typically used for functions that produce side effects, such as printing or writing to files
+
+
+Other Side-Effect Functions in Base R In addition to purrr, many base R functions also have side effects, including:
+
+print(): Outputs the value to the console. cat(): Concatenates and prints objects. plot(): Generates visual output. write.csv(): Writes data frames to a CSV file. assign(): Assigns a value to a variable in a specified environment. message(): Sends a message to the console, useful for debugging.
+
+**5.  Why can you name a variable sd in a function and not cause any issues with the sd function?**
+
+Ans: We can name a variable sd within function without causing issues with the built in sd() function because of scope and masking rule. 
+**1. Function scope:- ** when we define a variable inside a function, it exists in that function's local environment only. 
+**2. Masking:-** If a variable name in a local environment matches a function name like sd the local variable will mask the function witin that environment. It means outside the function, the global sd() function remains unchanged and accessible.
+
+
+
+**Task 2: Task 2 - Writing R Functions**
+
+1.  Write a basic function (call it getRMSE()) that takes in a vector of responses and a vector of predictions and outputs the RMSE.
+• If a value is missing for the vector of responses (i.e. an NA is present), allow for additional arguments to the mean() function (elipses) that removes the NA values in the computation. 
+
+```{r}
+getRMSE <- function(responses, predictions, na.rm = TRUE) {
+ 
+  # Calculate the RMSE
+  cal_rmse <- sqrt(mean((responses - predictions)^2, na.rm = na.rm))
+  
+  return(cal_rmse)
+}
+
+# Example usage
+responses <- c(3, 9, NA, 7, NA, 34, 67)
+predictions <- c(2, 5, 8, 23, 51, 21, 34)
+
+rmse_result <- getRMSE(responses, predictions)
+print(rmse_result)
+```
+
+2.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+• Test your RMSE function using this data.
+
+```{r}
+rmse_result1 <- getRMSE(resp, pred)
+print(paste0("Without NA \n ", rmse_result1))
+
+
+```
+
+• Repeat after replacing two of the response values with missing values (NA_real\_). – Test your RMSE function with and without specifying the behavior to deal with missing values.
+
+```{r}
+
+# Change the first two response values with NA_real_
+resp[c(1, 2)] <- NA_real_
+```
+
+```{r}
+
+#Compute RMSE, removing NA values if present
+rmse_without_na <- getRMSE(resp, pred)
+print(paste("RMSE without NA handling (na.rm = TRUE):", rmse_without_na))
+```
+
+```{r}
+# Test RMSE with explicit handling of NA
+rmse_with_na <- getRMSE(resp, pred, na.rm = FALSE)
+print(paste("RMSE with NA  (na.rm = FALSE):", rmse_with_na))
+
+
+```
+
+3.  Another common metric for evaluating predictions is mean absolute deviation. Write a function called getMAE() that follows the specifications of the getRMSE() function. getMAE use for handling the missing values
+
+```{r}
+getMAE <- function(responses, predictions, na.rm = TRUE){
+  # Calculate MAE
+  abs_value <- abs(responses - predictions)
+  mae_cal <- mean(abs_value, na.rm = na.rm)
+  return(mae_cal)
+}
+
+
+# Example
+responses <- c(3, 9, NA, 7, 6, 34, 67)
+predictions <- c(2, 5, 8, 23, 51, 21, 34)
+
+mae_result <- getMAE(responses, predictions)
+print(paste("Mean Absolute Value is", mae_result))
+```
+
+4.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+
+```
+
+• Test MAE function by using given data.
+
+```{r}
+mae_result1 <- getMAE(resp, pred)
+print(paste("The MAE value without NA ", mae_result1))
+```
+
+• Repeat after replacing two of the response values with missing values (NA_real\_). – Test your MAE function with and without specifying the behavior to deal with missing values.
+
+```{r}
+# Change 2 values with the missing values NA_real_
+resp[c(1,4)] <- NA_real_
+```
+
+```{r}
+# Without NA value
+mae_without_NA <- getMAE(resp,pred)
+print(paste("Result of MAE Without NA values ", mae_without_NA))
+```
+
+```{r}
+# with NA values
+mae_with_na <- getMAE(resp, pred, na.rm = FALSE)
+print(paste("MAE value with na ", mae_with_na))
+#print(mae_with_na)
+```
+
+5.  Let’s create a wrapper function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the wrapper function (we would call the getRMSE() and getMAE() functions helper functions). When returning your values, give them appropriate names.
+
+-   The function should check that two numeric (atomic) vectors have been passed (consider is.vector(), is.atomic(), and is.numeric()). If not, a message should print and the function should exit. 
+• The function should return both metrics by default and include names. The behavior should be able to be changed using a character string of metrics to find.
+
+```{r}
+# helper functions getRMSE() and getMAE() :
+getRMSE <- function(responses, predictions, na.rm = TRUE) {
+  sqrt(mean((responses - predictions)^2, na.rm = na.rm))
+}
+
+getMAE <- function(responses, predictions, na.rm = TRUE) {
+  mean(abs(responses - predictions), na.rm = na.rm)
+}
+
+# Wrapper function
+getMetrics <- function(responses, predictions, metric = "both", na.rm = TRUE) {
+  
+  # Check if response and prediction inputs are numeric atomic vectors
+  if (!(is.numeric(responses) && is.atomic(responses) && is.vector(responses))) {
+    stop("Error: 'responses' must be a numeric atomic vector.")
+  }
+  
+  if (!(is.numeric(predictions) && is.atomic(predictions) && is.vector(predictions))) {
+    stop("Error: 'predictions' must be a numeric atomic vector.")
+  }
+  
+  # Initialize an empty list 
+  result <- list()
+
+  # Compute the required metric based on the argument
+  if (metric == "RMSE" || metric == "both") {
+    result$RMSE <- getRMSE(responses, predictions, na.rm = na.rm)
+  }
+  
+  if (metric == "MAE" || metric == "both") {
+    result$MAE <- getMAE(responses, predictions, na.rm = na.rm)
+  }
+  
+  # If there is only single metric
+  if (metric != "both" && length(result) == 1) {
+    result <- unlist(result)
+  }
+  
+  return(result)
+}
+
+# Input 
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+
+# Test wrapper for both RMSE and MAE
+both_metrics <- getMetrics(resp, pred)
+print(both_metrics)
+
+# Test wrapper for RMSE
+rmse_only <- getMetrics(resp, pred, metric = "RMSE")
+print(rmse_only)
+
+# Test wrapper for MAE
+mae_only <- getMetrics(resp, pred, metric = "MAE")
+print(mae_only)
+
+# Test with invalid input (non-numeric vector)
+# invalid_input <- getMetrics(c("a", "b", "c"), pred)
+
+
+
+
+```
+
+6.  Run the following code to create some response values and predictions:
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+
+```{r}
+# Define RMSE Wrapper function
+rmseWrapper <- function(actual, predicted, na.rm = TRUE) {
+  if (!is.numeric(actual) || !is.numeric(predicted)) {
+    stop("Both 'actual' and 'predicted' should be numeric vectors.")
+  }
+  
+  if (na.rm) {
+    valid <- !is.na(actual) & !is.na(predicted)
+    actual <- actual[valid]
+    predicted <- predicted[valid]
+  }
+  
+  sqrt(mean((actual - predicted)^2, na.rm = na.rm))
+}
+
+# Define MAE Wrapper function
+maeWrapper <- function(actual, predicted, na.rm = TRUE) {
+  if (!is.numeric(actual) || !is.numeric(predicted)) {
+    stop("Both 'actual' and 'predicted' should be numeric vectors.")
+  }
+  
+  if (na.rm) {
+    valid <- !is.na(actual) & !is.na(predicted)
+    actual <- actual[valid]
+    predicted <- predicted[valid]
+  }
+  
+  mean(abs(actual - predicted), na.rm = na.rm)
+}
+
+```
+
+
+• Test your new function using this data. Call it once asking for each metric individually and once specifying both metrics
+   • Repeat with replacing two of the response values with missing values (NA_real\_). 
+   • Finally, test your function by passing it incorrect data (i.e. a data frame or something else instead of vectors.
+
+```{r}
+# run the wrapper function
+rmse_value <- rmseWrapper(resp, pred)
+print(paste("RMSE:", rmse_value))
+
+```
+
+Test the MAE wrapper function:
+
+```{r}
+mae_value <- maeWrapper(resp, pred)
+print(paste("MAE:", mae_value))
+
+```
+
+Test both functions individually:
+
+```{r}
+# Test RMSE
+rmse_result <- rmseWrapper(resp, pred)
+print(paste("Individual RMSE:", rmse_result))
+
+# Test MAE
+mae_result <- maeWrapper(resp, pred)
+print(paste("Individual MAE:", mae_result))
+
+```
+
+Step 3: Handle missing values
+
+```{r}
+# missing values into the response data
+resp[1] <- NA_real_
+resp[2] <- NA_real_
+
+# RMSE with missing values
+rmse_with_na <- rmseWrapper(resp, pred, na.rm = TRUE)
+print(paste("RMSE with NA ", rmse_with_na))
+
+# MAE with missing values
+mae_with_na <- maeWrapper(resp, pred, na.rm = TRUE)
+print(paste("MAE with NA ", mae_with_na))
+
+# missing values without na.rm
+rmse_with_na_false <- rmseWrapper(resp, pred, na.rm = FALSE)
+print(paste("RMSE with NA (na.rm = FALSE):", rmse_with_na_false))
+
+mae_with_na_false <- maeWrapper(resp, pred, na.rm = FALSE)
+print(paste("MAE with NA (na.rm = FALSE):", mae_with_na_false))
+
+```
+
+Step 4: Test with incorrect data types
+
+```{r}
+# Check the incorrect input (data frame)
+incorrect_data <- data.frame(resp, pred)
+
+# Expecting error messages here
+try(rmseWrapper(incorrect_data, pred))
+try(maeWrapper(resp, incorrect_data))
+
+```
+
+```{r}
+```
+
+**Task 3 - Querying an API and a Tidy-Style Function** 
+
+Use GET() from the httr package to return information about a topic
+
+```{r}
+#install.packages("lubridate")
+library(httr)
+library(jsonlite)
+library(tibble)
+library(dplyr)
+library(lubridate)
+library(purrr)
+
+```
+
+```{r}
+# API Key and Base URL
+api_key <- "f2ea85241c29455584a2681f775546e2"
+base_url <- "https://newsapi.org/v2/everything"
+
+ 
+```
+
+```{r}
+
+# Function to process the API response
+process_api_response <- function(api_response) {
+  # Check if the response was successful
+  if (api_response$status_code != 200) {
+    stop("Error: API request failed with status code ", api_response$status_code)
+  }
+  
+  # Convert raw content to character string
+  content_string <- rawToChar(api_response$content)
+  
+  # Parse JSON data
+  parsed_data <- fromJSON(content_string)
+  
+  # Extract the 'articles' element from the parsed data
+  articles <- parsed_data$articles
+  
+  # Convert the articles data to a tibble
+  tibble_data <- as_tibble(articles)
+  
+  return(tibble_data)
+}
+
+
+```
+
+```{r}
+# Main function to query news articles
+news_articles <- function(
+    q = "tesla",  
+    from = "2024-10-15",  
+    sortBy = "publishedAt",  
+    apiKey = api_key 
+) {
+  # Create a list of query parameters
+  query_params <- list(
+    q = q,
+    from = from,
+    sortBy = sortBy,
+    apiKey = apiKey
+  )
+  
+  
+ # https://newsapi.org/v2/everything?q=gamestop&from=2024-10-01&language=en&pageSize=100&apiKey=
+  #https://newsapi.org/v2/everything?q=Tesla&from=2024-10-01&sortBy=publishedAt&apiKey=f2ea85241c29455584a2681f775546e2"
+  # Construct the full URL with query parameters
+  full_url <- modify_url(base_url, query = query_params)
+  
+  print(full_url) 
+  
+  # call API using httr::GET
+  api_response <- GET(full_url)
+  
+  # Check if the request was successful
+  if (http_error(api_response)) {
+    stop("API request failed: ", status_code(api_response))
+  }
+  
+  # Process the response into a tibble
+  data <- process_api_response(api_response)
+  
+  return(data)
+}
+
+```
+
+
+
+
+
+```{r}
+# Function to query the API with user inputs
+query_news <- function(subject, start_date, api_key) {
+  # Validate the input data 
+  if (missing(subject) || !is.character(subject) || nchar(subject) == 0) {
+    stop("Subject must be a non-empty string.")
+  }
+  if (missing(start_date) || !is.character(start_date) || nchar(start_date) == 0) {
+    stop("Start date must be a non-empty string.")
+  }
+  if (missing(api_key) || !is.character(api_key) || nchar(api_key) == 0) {
+    stop("API key must be a non-empty string.")
+  }
+  
+  # Call the news_articles function with user inputs
+  articles_df <- news_articles(q = subject, from = start_date, apiKey = api_key)
+  
+  return(articles_df)
+}
+```
+
+** Use the query_news function twice to grab data **
+
+```{r}
+# First fucntion to grab data for tesla articles
+tesla_articles <- query_news(
+  subject = "Tesla",
+  start_date = "2024-10-01",  # Start from October 1, 2024
+  api_key = api_key
+)
+
+```
+
+```{r}
+# Second function to grab the data for spacex articles 
+spacex_articles <- query_news(
+  subject = "SpaceX",
+  start_date = "2024-10-01",  # Start from October 1, 2024
+  api_key = api_key
+)
+
+```
+
+```{r}
+# View the results
+print("Tesla Articles:")
+print(tesla_articles)
+#View(tesla_articles)
+
+```
+
+```{r}
+print("SpaceX Articles:")
+print(spacex_articles)
+#View(spacex_articles)
+  
+```
+
+4.With one of your objects, summarize the name of the source for each article. That is, find a one-way contingency table for this information.
+
+
+```{r}
+# One- way contingency table for Tesla Articles
+source_summary <- tesla_articles$source |>
+  mutate(name = as.character(name)) |>  
+  group_by(name) |>                     
+  summarise(count = n()) |>              
+  arrange(desc(count))                   
+
+# Print the contingency table
+print(source_summary)
+
+
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+table(tesla_articles$source$name, useNA = "always")
+```
+** 5. For each of your returned data objects, turn the publishedAt column into a date column using the lubridate package (see the PARSE DATE-TIMES section of the
+
+cheat sheet!). Then sort the two data frames, each by their new parsed date published column. Finally, create a new variable called pub_diff that is the difference #in time between the articles’ published dates (use lag() with mutate()). Save the modifications as new data frames.
+
+Assuming you have two data frames, tesla_articles and another one named second_articles
+
+ For example, let’s say the second data frame is stored as 'second_articles' **
+
+```{r}
+# Process the first data frame: tesla_articles
+tesla_articles_processed <- tesla_articles |>
+  # Convert the publishedAt column to a date column
+  mutate(publishedAt = ymd_hms(publishedAt)) |>
+  # Sort data by the new published date column
+  arrange(publishedAt) |>
+  # Create the pub_diff variable
+  mutate(pub_diff = publishedAt - lag(publishedAt))
+
+```
+
+```{r}
+# Process the second data frame: spacex_articles
+spacex_articles_processed <- spacex_articles |>
+  # Convert the publishedAt column to a date column
+  mutate(publishedAt = ymd_hms(publishedAt)) |>
+  # Sort data by the new published date column
+  arrange(publishedAt) |>
+  # Create the pub_diff variable
+  mutate(pub_diff = publishedAt - lag(publishedAt))
+
+```
+
+```{r}
+# View the modified data frames
+print("Processed Tesla Articles:")
+print(tesla_articles_processed)
+#View(tesla_articles_processed)
+
+
+```
+
+```{r}
+
+print("Processed Spacex Articles:")
+print(spacex_articles_processed)
+```
+
+**6.With each of your resulting two data objects (each a data frame, which is a special case of a list) do the following actions:**
+     • Choose one of your data frames. Subset the data frame to only return the date version of publishedAt and the pub_diff variables. Then use one call to the map() function to return the mean, standard deviation, and median of these columns. You should use a custom anonymous function using ‘shorthand’ notation (\(x) ...). Note that the pub_diff variable includes an NA so you’ll need to set na.rm = TRUE in the calls to mean(0, sd(), and median().
+
+```{r}
+# Subset the tesla_articles_processed data frame
+tesla_subset <- tesla_articles_processed |>
+  select(publishedAt, pub_diff)
+
+
+```
+
+```{r}
+# Use map() to calculate the mean, standard deviation, and median for each column
+statistics_results <- map(tesla_subset, ~ c(
+  mean = mean(.x, na.rm = TRUE),
+  sd = sd(.x, na.rm = TRUE),
+  median = median(.x, na.rm = TRUE)
+))
+
+```
+
+```{r}
+# Convert the results to data frame
+statistics_df <- as.data.frame(do.call(rbind, statistics_results))
+statistics_df <- tibble::rownames_to_column(statistics_df, var = "Statistic")
+
+```
+
+```{r}
+# View the results
+print("Statistics for tesla_articles_processed:")
+print(statistics_df)
+
+
+```
