@@ -57,24 +57,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="HW06_files/libs/clipboard/clipboard.min.js"></script>
-<script src="HW06_files/libs/quarto-html/quarto.js"></script>
-<script src="HW06_files/libs/quarto-html/popper.min.js"></script>
-<script src="HW06_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="HW06_files/libs/quarto-html/anchor.min.js"></script>
-<link href="HW06_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="HW06_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="HW06_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="HW06_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="HW06_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 
 
 </head>
 
 <body class="fullcontent">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -554,24 +591,27 @@ Attaching package: 'purrr'</code></pre>
 <span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">apiKey =</span> apiKey</span>
 <span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construct the full URL with query parameters</span></span>
-<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a>  full_url <span class="ot">&lt;-</span> <span class="fu">modify_url</span>(base_url, <span class="at">query =</span> query_params)</span>
-<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(full_url) </span>
-<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># call API using httr::GET</span></span>
-<span id="cb67-22"><a href="#cb67-22" aria-hidden="true" tabindex="-1"></a>  api_response <span class="ot">&lt;-</span> <span class="fu">GET</span>(full_url)</span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a> <span class="co"># https://newsapi.org/v2/everything?q=gamestop&amp;from=2024-10-01&amp;language=en&amp;pageSize=100&amp;apiKey=</span></span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#https://newsapi.org/v2/everything?q=Tesla&amp;from=2024-10-01&amp;sortBy=publishedAt&amp;apiKey=f2ea85241c29455584a2681f775546e2"</span></span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construct the full URL with query parameters</span></span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a>  full_url <span class="ot">&lt;-</span> <span class="fu">modify_url</span>(base_url, <span class="at">query =</span> query_params)</span>
+<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-22"><a href="#cb67-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(full_url) </span>
 <span id="cb67-23"><a href="#cb67-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-24"><a href="#cb67-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check if the request was successful</span></span>
-<span id="cb67-25"><a href="#cb67-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">http_error</span>(api_response)) {</span>
-<span id="cb67-26"><a href="#cb67-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"API request failed: "</span>, <span class="fu">status_code</span>(api_response))</span>
-<span id="cb67-27"><a href="#cb67-27" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb67-28"><a href="#cb67-28" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-29"><a href="#cb67-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process the response into a tibble</span></span>
-<span id="cb67-30"><a href="#cb67-30" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">process_api_response</span>(api_response)</span>
+<span id="cb67-24"><a href="#cb67-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># call API using httr::GET</span></span>
+<span id="cb67-25"><a href="#cb67-25" aria-hidden="true" tabindex="-1"></a>  api_response <span class="ot">&lt;-</span> <span class="fu">GET</span>(full_url)</span>
+<span id="cb67-26"><a href="#cb67-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-27"><a href="#cb67-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check if the request was successful</span></span>
+<span id="cb67-28"><a href="#cb67-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">http_error</span>(api_response)) {</span>
+<span id="cb67-29"><a href="#cb67-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"API request failed: "</span>, <span class="fu">status_code</span>(api_response))</span>
+<span id="cb67-30"><a href="#cb67-30" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb67-31"><a href="#cb67-31" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb67-32"><a href="#cb67-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
-<span id="cb67-33"><a href="#cb67-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-32"><a href="#cb67-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Process the response into a tibble</span></span>
+<span id="cb67-33"><a href="#cb67-33" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">process_api_response</span>(api_response)</span>
+<span id="cb67-34"><a href="#cb67-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb67-35"><a href="#cb67-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
+<span id="cb67-36"><a href="#cb67-36" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to query the API with user inputs</span></span>
@@ -627,16 +667,16 @@ Attaching package: 'purrr'</code></pre>
 <pre><code># A tibble: 100 × 8
    source$id $name author title description url   urlToImage publishedAt content
    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;  
- 1 &lt;NA&gt;      Huff… Danie… Elon… "Future Co… http… https://i… 2024-10-16… "A sup…
- 2 &lt;NA&gt;      Twea… Antho… ASUS… "ASUS does… http… https://s… 2024-10-16… "ASUS …
- 3 &lt;NA&gt;      Xata… Steve… Prob… "Es un cua… http… https://i… 2024-10-16… "Es un…
- 4 &lt;NA&gt;      Theg… Paul … Due … "The follo… http… https://w… 2024-10-16… "The f…
- 5 la-nacion La N… BBC M… Cómo… "El destin… http… https://r… 2024-10-16… "Georg…
- 6 &lt;NA&gt;      Elec… Jo Bo… Tesl… "On today’… http… https://i… 2024-10-16… "On to…
- 7 &lt;NA&gt;      Eles… Enriq… Musk… "El evento… http… https://s… 2024-10-16… "El ev…
- 8 &lt;NA&gt;      Slas… feedf… How … "How Tesla… http… &lt;NA&gt;       2024-10-16… "\"Con…
- 9 &lt;NA&gt;      Twea… Antho… NVID… "NVIDIA CE… http… https://s… 2024-10-16… "NVIDI…
-10 &lt;NA&gt;      Stor… 國際…  特斯… "特斯拉執…  http… https://i… 2024-10-16… "Cyber…
+ 1 lenta     Lenta Марин… "Ило… "Режиссер … http… https://i… 2024-10-16… "«, » …
+ 2 &lt;NA&gt;      Unwi… 藍骨   "Vol… "西九文化…  http… https://c… 2024-10-16… "Volvo…
+ 3 &lt;NA&gt;      Www.… Marie… "Elo… "Amerikas … http… https://i… 2024-10-16… "Bei e…
+ 4 &lt;NA&gt;      Stor… 小七…  "Mod… "經濟部能…  http… https://i… 2024-10-16… "(10/1…
+ 5 &lt;NA&gt;      Bizt… inves… "Tes… "InvestorP… http… https://b… 2024-10-16… "Inves…
+ 6 &lt;NA&gt;      Bizt… youtu… "Tes… "Tesla Inc… http… https://b… 2024-10-16… "Tesla…
+ 7 nbc-news  NBC … David… "Elo… "Elon Musk… http… https://m… 2024-10-16… "Elon …
+ 8 &lt;NA&gt;      Ilgi… redaz… "Nei… "La Procur… http… https://i… 2024-10-16… "Andre…
+ 9 business… Busi… ktang… "Mar… "Marc Andr… http… https://i… 2024-10-16… "New f…
+10 business… Busi… bmetz… "Elo… "A new FEC… http… https://i… 2024-10-16… "Elon …
 # ℹ 90 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co">#View(tesla_articles)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -651,16 +691,16 @@ Attaching package: 'purrr'</code></pre>
 <pre><code># A tibble: 100 × 8
    source$id $name author title description url   urlToImage publishedAt content
    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;  
- 1 &lt;NA&gt;      Slas… Anony… The … "Overall, … http… &lt;NA&gt;       2024-10-16… "Overa…
- 2 &lt;NA&gt;      Twea… Antho… ASUS… "ASUS does… http… https://s… 2024-10-16… "ASUS …
- 3 &lt;NA&gt;      Eles… Enriq… Musk… "El evento… http… https://s… 2024-10-16… "El ev…
- 4 &lt;NA&gt;      Twea… Antho… NVID… "NVIDIA CE… http… https://s… 2024-10-16… "NVIDI…
- 5 &lt;NA&gt;      Yaho… Yahoo… 「筷… "美國太空…  http… https://s… 2024-10-16… "[Newt…
- 6 &lt;NA&gt;      Tech… Unwir… Spac… "馬斯克（E… http… https://i… 2024-10-16… "Elon …
- 7 &lt;NA&gt;      Tist… T.B    김건… "Trump cla… http… https://i… 2024-10-16… "Trump…
- 8 &lt;NA&gt;      Live… Gulve… Spec… "Reliance … http… https://w… 2024-10-16… "Relia…
- 9 &lt;NA&gt;      CNET  &lt;NA&gt;   株式… "株式会社…  http… https://j… 2024-10-16… "20241…
-10 &lt;NA&gt;      Nauk… Danie… Lanz… "En las úl… http… https://d… 2024-10-15… "En la…
+ 1 fox-news  Fox … Greg … "GRE… "'Gutfeld!… http… https://c… 2024-10-16… "So la…
+ 2 nbc-news  NBC … David… "Elo… "Elon Musk… http… https://m… 2024-10-16… "Elon …
+ 3 &lt;NA&gt;      BBC … https… "Bay… "NASA đã p… http… https://i… 2024-10-16… "Ngun …
+ 4 le-monde  Le M… Julie… "New… "A la croi… http… https://i… 2024-10-16… "Histo…
+ 5 &lt;NA&gt;      Ilgi… redaz… "Nei… "La Procur… http… https://i… 2024-10-16… "Andre…
+ 6 &lt;NA&gt;      Elco… Avi L… "La … "El telesc… http… https://i… 2024-10-16… "A par…
+ 7 business… Busi… bmetz… "Elo… "A new FEC… http… https://i… 2024-10-16… "Elon …
+ 8 &lt;NA&gt;      Subs… Nabee… "Ref… "A retrosp… http… https://s… 2024-10-16… "Palan…
+ 9 &lt;NA&gt;      Twea… Antho… "Mic… "Microsoft… http… https://s… 2024-10-16… "Micro…
+10 &lt;NA&gt;      Cryp… Assad… "Tes… "Tesla, th… http… https://c… 2024-10-16… "Tesla…
 # ℹ 90 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co">#View(spacex_articles)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -677,20 +717,20 @@ Attaching package: 'purrr'</code></pre>
 <span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the contingency table</span></span>
 <span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(source_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 63 × 2
+<pre><code># A tibble: 65 × 2
    name                count
    &lt;chr&gt;               &lt;int&gt;
- 1 Electrek                6
- 2 Feber.se                6
- 3 Slashdot.org            6
- 4 Yahoo Entertainment     6
- 5 Aftonbladet.se          5
- 6 Xataka.com.mx           5
+ 1 Slashdot.org            6
+ 2 Electrek                5
+ 3 Xataka.com.mx           5
+ 4 Yahoo Entertainment     5
+ 5 Feber.se                4
+ 6 Aftonbladet.se          3
  7 Gizmodo.com             3
- 8 Autocar                 2
+ 8 TweakTown               3
  9 Berliner Morgenpost     2
-10 DIE WELT                2
-# ℹ 53 more rows</code></pre>
+10 Biztoc.com              2
+# ℹ 55 more rows</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -698,49 +738,49 @@ Attaching package: 'purrr'</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                 [Removed]            Aftonbladet.se                   ANSA.it 
-                        1                         5                         1 
+                        1                         3                         1 
                   Autocar                  BBC News       Berliner Morgenpost 
-                        2                         1                         2 
-            Boston Herald            Breitbart News          Business Insider 
-                        1                         1                         1 
-           Caradisiac.com             CleanTechnica                  CoinDesk 
-                        1                         1                         1 
-      Commercial Observer              Daily Signal                   Decrypt 
-                        1                         1                         1 
-         Der Tagesspiegel                    Dezeen                  DIE WELT 
                         1                         1                         2 
-                 Die Zeit             Diepresse.com              Droidnews.ru 
+               Biztoc.com             Boston Herald            Breitbart News 
+                        2                         1                         1 
+         Business Insider            Caradisiac.com             CleanTechnica 
+                        2                         1                         1 
+                 CoinDesk       Commercial Observer               CryptoSlate 
                         1                         1                         1 
+             Daily Signal                   Decrypt                    Dezeen 
+                        1                         1                         1 
+                 DIE WELT             Diepresse.com              Droidnews.ru 
+                        2                         1                         1 
                  Electrek             Elespanol.com                  Feber.se 
-                        6                         1                         6 
-                   Forbes                   Fortune                 Frandroid 
+                        5                         1                         4 
+                   Forbes                   Fortune               Gizmodo.com 
+                        2                         1                         3 
+            GlobeNewswire                  HuffPost                       IGN 
+                        1                         2                         1 
+            Ilgiornale.it                 InfoMoney             Investing.com 
+                        1                         1                         2 
+Investor's Business Daily              Jungewelt.de                 La Nacion 
                         1                         1                         1 
-              Gizmodo.com             GlobeNewswire                 Hdblog.it 
-                        3                         1                         1 
-                 HuffPost              Hwupgrade.it                       IGN 
-                        2                         1                         1 
-            Investing.com Investor's Business Daily              Jungewelt.de 
-                        2                         1                         1 
-                La Nacion                 New Atlas         New York Magazine 
+                    Lenta                  NBC News                 New Atlas 
                         1                         1                         1 
-          Next Big Future       Olhardigital.com.br              Ouest-France 
+        New York Magazine           Next Big Future       Olhardigital.com.br 
                         1                         1                         1 
           Overclockers.ru              Quartz India                        RT 
                         2                         1                         1 
                   Sapo.pt       Securityaffairs.com              Slashdot.org 
                         1                         1                         6 
-                 STERN.de                  Storm.mg         Svenska Dagbladet 
-                        1                         1                         1 
-               TechCrunch                  TechSpot              Telepolis.de 
+                 Storm.mg         Svenska Dagbladet                TechCrunch 
+                        2                         1                         1 
+                 TechSpot              Telepolis.de              The Diplomat 
                         1                         1                         1 
         The Week Magazine              Thebridge.jp      Thegatewaypundit.com 
                         1                         1                         1 
               Tistory.com              Tuxboard.com                 TweakTown 
-                        1                         1                         2 
-                      Vox             Xataka.com.mx       Yahoo Entertainment 
-                        1                         5                         6 
-                     &lt;NA&gt; 
-                        0 </code></pre>
+                        1                         1                         3 
+                Unwire.hk                       Vox                Www.nzz.ch 
+                        1                         1                         1 
+            Xataka.com.mx       Yahoo Entertainment                      &lt;NA&gt; 
+                        5                         5                         0 </code></pre>
 </div>
 </div>
 <p>** 5. For each of your returned data objects, turn the publishedAt column into a date column using the lubridate package (see the PARSE DATE-TIMES section of the</p>
@@ -778,16 +818,16 @@ Attaching package: 'purrr'</code></pre>
 <pre><code># A tibble: 100 × 9
    source$id $name author title description url   urlToImage publishedAt        
    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;dttm&gt;             
- 1 &lt;NA&gt;      Yaho… 財訊…  晶片… "【財訊快…  http… https://s… 2024-10-15 16:28:16
- 2 &lt;NA&gt;      Afto… &lt;NA&gt;   Varn… "Senaste n… http… https://i… 2024-10-15 16:29:22
- 3 &lt;NA&gt;      Auto… Nick … Xpen… "Xpeng G6 … http… https://w… 2024-10-15 16:30:32
- 4 die-zeit  Die … ZEIT … Tesl… "Das Tesla… http… https://i… 2024-10-15 16:31:53
- 5 &lt;NA&gt;      Elec… Miche… Niss… "Nissan Ar… http… https://i… 2024-10-15 16:35:15
- 6 &lt;NA&gt;      Febe… Hugo … YouT… "Gemensamm… http… https://s… 2024-10-15 16:40:00
- 7 business… Busi… hlang… The … "Anthony L… http… https://i… 2024-10-15 16:40:07
- 8 &lt;NA&gt;      STER… STERN… Elek… "Für den b… http… https://i… 2024-10-15 16:45:50
- 9 der-tage… Der … Der T… Elek… "Für den b… http… https://w… 2024-10-15 16:47:28
-10 &lt;NA&gt;      Oues… Par J… Faut… "Les marqu… http… https://m… 2024-10-15 16:50:01
+ 1 &lt;NA&gt;      Tuxb… B. L.  Les … "C’est la … http… https://w… 2024-10-15 17:04:20
+ 2 &lt;NA&gt;      Quar… Owen … Amer… "In recent… http… https://i… 2024-10-15 17:04:47
+ 3 ansa      ANSA… &lt;NA&gt;   Andr… "30 anni, … http… https://w… 2024-10-15 17:05:30
+ 4 &lt;NA&gt;      Berl… FUNKE… Tesl… "Bereits z… http… https://i… 2024-10-15 17:08:21
+ 5 &lt;NA&gt;      Diep… Die P… Tesl… "Das Land … http… https://i… 2024-10-15 17:09:55
+ 6 &lt;NA&gt;      DIE … WELT   Jetz… "In einem … http… https://i… 2024-10-15 17:23:33
+ 7 &lt;NA&gt;      Febe… Bobby… Rege… "\"För ett… http… https://s… 2024-10-15 17:30:00
+ 8 ign       IGN   Ketly… Está… "Muitas pe… http… https://s… 2024-10-15 17:31:28
+ 9 &lt;NA&gt;      Huff… Marco… 'I, … "Alex Proy… http… https://i… 2024-10-15 17:36:48
+10 &lt;NA&gt;      Comm… Bpasc… Bank… "Lincoln P… http… https://c… 2024-10-15 17:42:50
 # ℹ 90 more rows
 # ℹ 2 more variables: content &lt;chr&gt;, pub_diff &lt;drtn&gt;</code></pre>
 </div>
@@ -803,16 +843,16 @@ Attaching package: 'purrr'</code></pre>
 <pre><code># A tibble: 100 × 9
    source$id $name author title description url   urlToImage publishedAt        
    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;dttm&gt;             
- 1 &lt;NA&gt;      Tele… Marty… "Glo… "With just… http… https://a… 2024-10-15 12:56:30
- 2 &lt;NA&gt;      Spac… andre… "The… "Leaders o… http… https://c… 2024-10-15 13:00:09
- 3 &lt;NA&gt;      Anty… Patry… "Chi… "Nie tylko… http… https://s… 2024-10-15 13:00:13
- 4 &lt;NA&gt;      WFTV… Gene … "WAT… "WATCH: Fa… http… https://c… 2024-10-15 13:01:32
- 5 techcrun… Tech… Aria … "Inv… "Inversion… http… https://t… 2024-10-15 13:03:31
- 6 &lt;NA&gt;      Unex… unexp… "NAS… "The space… http… https://w… 2024-10-15 13:06:08
- 7 &lt;NA&gt;      N-tv… n-tv … "Mög… "Schon mit… http… https://b… 2024-10-15 13:11:31
- 8 &lt;NA&gt;      Yaho… Sanji… "iPa… "2024年10…  http… &lt;NA&gt;       2024-10-15 13:13:26
- 9 &lt;NA&gt;      Tass… &lt;NA&gt;   "Бол… "Михаил Ко… http… https://c… 2024-10-15 13:15:01
-10 &lt;NA&gt;      Tvn2… ps     "Wyj… "Przez kil… http… https://t… 2024-10-15 13:18:21
+ 1 &lt;NA&gt;      Tvn2… ps     "Wyj… "Przez kil… http… https://t… 2024-10-15 13:18:21
+ 2 &lt;NA&gt;      Over… Fanto… "Аэр… "Модульная… http… https://o… 2024-10-15 13:19:33
+ 3 &lt;NA&gt;      Inte… Inter… "Una… "Il 14 ott… http… https://m… 2024-10-15 13:25:11
+ 4 &lt;NA&gt;      Lega… Umber… "La … "La missio… http… https://l… 2024-10-15 13:30:20
+ 5 &lt;NA&gt;      Olha… Aless… "Lix… "Projeções… http… https://o… 2024-10-15 13:36:01
+ 6 &lt;NA&gt;      Zive… Jiří … "Rus… ""          http… https://w… 2024-10-15 13:45:00
+ 7 &lt;NA&gt;      Libe… Carla… "¿Po… "La NASA l… http… https://s… 2024-10-15 13:50:26
+ 8 &lt;NA&gt;      The … David… "The… "A frozen … http… https://m… 2024-10-15 13:57:50
+ 9 &lt;NA&gt;      Spac… Saman… "Spa… "In the wa… http… https://c… 2024-10-15 14:00:50
+10 &lt;NA&gt;      Raw … Matth… "Gli… "Tech bill… http… https://w… 2024-10-15 14:05:02
 # ℹ 90 more rows
 # ℹ 2 more variables: content &lt;chr&gt;, pub_diff &lt;drtn&gt;</code></pre>
 </div>
@@ -844,14 +884,15 @@ Attaching package: 'purrr'</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(statistics_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Statistic         mean        sd     median
-1 publishedAt 1.729022e+09 9482.7859 1729018984
-2    pub_diff 3.188182e+02  374.2007        200</code></pre>
+<pre><code>    Statistic         mean         sd     median
+1 publishedAt 1.729027e+09 11616.9161 1729025169
+2    pub_diff 3.823333e+02   458.3764        271</code></pre>
 </div>
 </div>
 
-</main>
-<!-- /main column -->
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
